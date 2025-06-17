@@ -226,4 +226,4 @@ ASALocalRun/
 healthchecksdb
 
 # Zone.Identifier files from Windows
-*.Zone.Identifier
+*:Zone.Identifier
