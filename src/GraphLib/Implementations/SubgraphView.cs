@@ -220,3 +220,38 @@ public static class SubgraphExtensions
         return new UndirectedSubgraphView<TGraph>(graph, node => nodeSet.Contains(node));
     }
 }
+
+public class WeightedSubgraphView<TGraph, TWeight> : SubgraphView<TGraph>, IWeightedGraph<TWeight>
+    where TGraph : IGraph, IWeightedGraph<TWeight>
+{
+    public WeightedSubgraphView(TGraph parentGraph, Predicate<NodeId>? nodeFilter = null, Predicate<Edge>? edgeFilter = null)
+        : base(parentGraph, nodeFilter, edgeFilter)
+    {
+    }
+
+    public TWeight GetEdgeWeight(NodeId source, NodeId target)
+    {
+        if (!ContainsNode(source) || !ContainsNode(target))
+            throw new InvalidOperationException($"Edge from {source} to {target} not found in subgraph");
+
+        var edge = new Edge(source, target);
+        if (_edgeFilter != null && !_edgeFilter(edge))
+            throw new InvalidOperationException($"Edge from {source} to {target} not found in subgraph");
+
+        return ((IWeightedGraph<TWeight>)ParentGraph).GetEdgeWeight(source, target);
+    }
+
+    public bool TryGetEdgeWeight(NodeId source, NodeId target, out TWeight weight)
+    {
+        weight = default!;
+
+        if (!ContainsNode(source) || !ContainsNode(target))
+            return false;
+
+        var edge = new Edge(source, target);
+        if (_edgeFilter != null && !_edgeFilter(edge))
+            return false;
+
+        return ((IWeightedGraph<TWeight>)ParentGraph).TryGetEdgeWeight(source, target, out weight);
+    }
+}

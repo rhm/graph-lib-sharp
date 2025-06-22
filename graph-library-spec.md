@@ -617,25 +617,6 @@ public static class GraphFactory
 }
 ```
 
-## Serialization Support
-
-```csharp
-public interface IGraphSerializer<TGraph> where TGraph : IGraph
-{
-    void Serialize(TGraph graph, Stream stream);
-    TGraph Deserialize(Stream stream);
-}
-
-public class GraphSerializers
-{
-    // Built-in serializers
-    public static IGraphSerializer<TGraph> Json<TGraph>() where TGraph : IGraph, new();
-    public static IGraphSerializer<TGraph> Binary<TGraph>() where TGraph : IGraph, new();
-    public static IGraphSerializer<TGraph> GraphML<TGraph>() where TGraph : IGraph, new();
-    public static IGraphSerializer<TGraph> Dot<TGraph>() where TGraph : IGraph, new();
-}
-```
-
 ## Performance Considerations
 
 ### Memory Layout
